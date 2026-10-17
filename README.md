@@ -43,3 +43,29 @@ Observed on 2026-10-18 KST: **12/12 tests pass**, 5/6 synthetic jobs scheduled a
 Upon an original NEAR Agent Market award with verified held 450 USDC buyer budget and explicit agreed quote, deliver an authenticated HTTPS agent, approved routing provider, isolated temporary CSV upload, configurable planning period, reproducible assignments/backfill, per-gap feasibility proof, audit log, buyer-driven re-run, documented deletion and Marketplace Automation listing. Operator's own no-principal budget rules apply. Exact public landing/listing URL is a **future deliverable**, not represented as live here.
 
 Maintained independently by the VM2 worker. AI-assisted development is disclosed in the bounty proposal.
+
+## Real road-network duration preflight (synthetic locations ONLY)
+
+The earlier 12-location matrix is deliberately fictional. A second, separately named demonstration now uses genuine route *estimates* from the public OSRM road-network **table** endpoint on **twelve invented location IDs placed at public San Francisco street coordinates**; these are not actual customers, addresses or routes, and not real-time traffic.
+
+```sh
+# Public demo mode is opt-in, and each row must be marked synthetic=true.
+python3 route_matrix_osrm.py \
+  --coordinates fixtures/coordinates_synthetic_sf.csv \
+  --router https://router.project-osrm.org \
+  --public-synthetic-demo \
+  --output /tmp/route_times_synthetic_only.json
+
+python3 route_planner.py \
+  --crews fixtures/crews.csv \
+  --jobs fixtures/jobs.csv \
+  --customers fixtures/customers.csv \
+  --matrix fixtures/travel_matrix_osrm_synthetic_sf.json \
+  --date 2026-10-18
+```
+
+The tested independent sample file `fixtures/travel_matrix_osrm_synthetic_sf.json` is a real OSRM duration matrix of public fictional SF points, with source labeling and times rounded **up** to minutes. A live run scheduled **5 of 6** synthetic jobs, explicitly rejected the impossible appointment, prepared six due-customer backfill draft suggestions and **sent zero** messages. Do not represent this as an accepted contract, a staffed dispatch service, real customer availability, live traffic, final route optimization, or a paid agent.
+
+**Mandatory privacy/eligibility boundary:** `route_matrix_osrm.py` refuses non-synthetic coordinates, outside-the-fixture geographic data, arbitrary remote hosts, embedded URL credentials and missing/unreachable table entries. For a real commercial buyer job, obtain written routing-provider authorization and use a buyer-approved self-hosted OSRM/Valhalla deployment or licensed private matrix endpoint; **never send private customer addresses or service locations to the public demo server.** Current implementation supports an explicit loopback OSRM router; production hosting, authorization, rate limiting, uploads, cleanup and buyer-provided road data remain post-award work.
+
+`python3 -m unittest discover -s tests -v` now passes **25/25 local tests**, including 13 new remote-privacy, bad-matrix and input-rejection tests. The public demo uses read-only HTTP requests and does not unlock, sign, deposit or spend from any crypto wallet.
