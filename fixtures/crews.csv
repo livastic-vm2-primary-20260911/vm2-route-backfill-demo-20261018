@@ -1,0 +1,3 @@
+crew_id,start,end,start_location,skills
+north,08:00,17:00,D0,plumbing|inspection
+south,08:00,17:00,D10,electrical|inspection

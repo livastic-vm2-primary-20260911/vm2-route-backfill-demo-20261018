@@ -1,0 +1,7 @@
+customer_id,name,location,last_service_date,service_interval_days,open_quote,do_not_contact,opt_out,required_skill,duration_minutes
+cust-due,Example A,C2,2026-07-01,30,0,0,0,plumbing,30
+cust-optout,Example B,C4,2026-06-01,30,0,1,1,inspection,30
+cust-quote,Example C,C9,,,1,0,0,inspection,45
+cust-undated,Example D,C6,,,0,0,0,inspection,45
+cust-noaddr,Example E,,2026-07-01,30,0,0,0,inspection,30
+cust-duplicate,Example A,C2,2026-07-01,30,0,0,0,plumbing,30
