@@ -1,6 +1,14 @@
 # Field Service Route & Schedule Backfill — Bounded Synthetic Feasibility Demo
 
-**Purpose:** Pre-award, read-only demonstration for an **independently posted** NEAR Agent Market field-service scheduling commission (buyer budget 450 USDC). This repository is a preliminary feasibility prototype, **NOT a live listed agent, not a paid contract, not guaranteed revenue, and not a substitute for a buyer-accepted deployment.**
+**Purpose:** Pre-award, read-only demonstration for an **independently posted** NEAR Agent Market field-service scheduling commission (buyer budget 450 USDC; separately existing operator bid 390 USDC still pending). This repository is a preliminary feasibility prototype, **NOT a live listed agent, not a paid contract, not guaranteed revenue, and not a substitute for a buyer-accepted deployment.**
+
+## Browse the verified synthetic result
+
+**[Open the public interactive synthetic schedule/backfill preview](https://livastic-vm2-primary-20260911.github.io/vm2-route-backfill-demo-20261018/)**
+
+This page **replays an authentic deterministic local Python execution result** generated from the committed fictional OSRM road-time fixture. It lets a reviewer choose the north/south crew, inspect time windows and available gaps, and see six clearly **unsent** candidate backfill drafts with no customer upload, wallet, login, external JavaScript, or real-world outreach. The page does not run new private data through a hosted solver and is not a paid customer delivery, live hosted scheduling API or proof that an existing 390 USDC bid has been selected.
+
+For fully reproducible evaluation, inspect the docs/synthetic_plan.json fixture, original planner, tests and synthetic data constraints below.
 
 ## What works now
 
