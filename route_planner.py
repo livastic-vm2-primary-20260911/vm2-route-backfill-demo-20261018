@@ -75,12 +75,17 @@ class Matrix:
     def travel(self, start: str, finish: str) -> int:
         if start == finish:
             return 0
-        value = self.values.get(start, {}).get(finish)
+        row = self.values.get(start)
+        if not isinstance(row, dict):
+            raise ValueError("invalid travel matrix row")
+        value = row.get(finish)
         if value is None:
             raise KeyError(f"missing travel time {start}->{finish}")
-        value = int(value)
-        if value < 0 or value > 24 * 60:
-            raise ValueError("invalid travel time")
+        # Never coerce a buyer-provided travel duration: int(2.9) rounds DOWN
+        # and int(True) silently becomes one minute, both unsafe for dispatch.
+        # Normalized OSRM matrices already contain ceiled integer minutes.
+        if type(value) is not int or value < 0 or value > 24 * 60:
+            raise ValueError("invalid travel time: expected integer minutes")
         return value
 
 

@@ -61,7 +61,7 @@ td{font-variant-numeric:tabular-nums}
 <p class="lead">Inspect reproducible Python output built with a publicly obtainable OSRM travel-time matrix over <strong>invented San Francisco points</strong>. Skills, working hours, time windows and return-to-depot feasibility are checked. All backfill communications are <strong>unsent drafts</strong>.</p>
 <div class="keylinks">
 <a class="btn primary" href="#schedule">Inspect five scheduled jobs ↓</a>
-<a class="btn light" href="https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018">Read source &amp; run 36 tests ↗</a>
+<a class="btn light" href="https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018">Read source &amp; run 42 tests ↗</a>
 <a class="btn light" href="./synthetic_plan.json">Inspect complete reproducible JSON ↗</a>
 </div>
 <div class="kpis" aria-label="Fictional scenario outcomes">
@@ -98,6 +98,7 @@ td{font-variant-numeric:tabular-nums}
 <li>Rejects unschedulable jobs with a reason instead of silently dropping them.</li>
 <li>Rejects an opted-out identity or shared location even if the other duplicate row looks eligible.</li>
 <li>Rejects contradictory duplicate customer history and invalid duration fields conservatively.</li>
+<li>Rejects fractional, Boolean, string or malformed route-matrix travel minutes instead of underestimating the driving time.</li>
 <li>Does not send identifiable service addresses to a public OSRM routing server. Real data requires a buyer-authorized, privacy-preserving route source and explicit contract scope.</li>
 <li>Does not prove global optimum, driving traffic conditions, compliance, live dispatch or a paid contract.</li>
 </ul>
