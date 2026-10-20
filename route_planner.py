@@ -30,6 +30,17 @@ def truthy(v: Any) -> bool:
     return str(v).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
+def contact_denied(v: Any) -> bool:
+    """Treat unknown NONEMPTY CRM suppression codes as denial, not consent.
+
+    Legacy clean exports use blank/0/false/no/n/off for no suppression;
+    a value such as DNC, unsubscribed, opted out, or '?' must fail closed.
+    """
+    if v is None:
+        return False
+    return str(v).strip().casefold() not in {"", "0", "false", "no", "n", "off"}
+
+
 def records(path: Path) -> list[dict]:
     with path.open(newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
@@ -184,7 +195,7 @@ def backfill(crews: list[dict], routes: dict, people: list[dict],
     for raw in people:
         contact=str(raw.get("customer_id") or "").strip()
         location=str(raw.get("location") or "").strip().casefold().replace(" ","")
-        if truthy(raw.get("do_not_contact")) or truthy(raw.get("opt_out")):
+        if contact_denied(raw.get("do_not_contact")) or contact_denied(raw.get("opt_out")):
             if contact:blocked_ids.add(contact)
             if location:blocked_locations.add(location)
         if not contact or not location:continue
