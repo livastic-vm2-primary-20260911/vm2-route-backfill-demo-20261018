@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123d36">
+<title>Field Service Dispatch — Verified Synthetic Route Backfill Demo | Workflow Guard</title>
+<meta name="description" content="Inspect a real deterministic Python routing result: five synthetic jobs assigned, one correctly rejected, six unsent backfill drafts, privacy-safe duplicate opt-out filtering.">
+<meta property="og:title" content="Field Service Route Planning — Verified, Synthetic Feasibility Demo">
+<meta property="og:description" content="All data fictional. Real OSRM estimate from invented San Francisco locations. No customer data, contacts or live job orders.">
+<meta property="og:type" content="website">
+<style>
+:root{color-scheme:light;--ink:#123b34;--muted:#4b675f;--line:#cbdcd5;--bg:#f6faf8;--paper:#fff;--blue:#0b6555;--accent:#f3b548}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.58 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--blue);text-decoration-thickness:1.4px;text-underline-offset:3px}
+a:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+header{background:var(--ink);color:#fff;padding:18px 0}header a{color:#fff}
+.container{width:min(1100px,calc(100% - 32px));margin-inline:auto}
+.headerinner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.brand{font-size:1.1rem;font-weight:800;letter-spacing:.02em;text-decoration:none}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+.hero{padding:44px 0 28px;background:linear-gradient(135deg,#e9f5ee,#f6faf8)}
+.chip{display:inline-block;border:1px solid #579077;border-radius:40px;padding:4px 12px;color:#15533e;font-size:.78rem;font-weight:750;letter-spacing:.02em}
+h1{font-size:clamp(2rem,4.5vw,3.35rem);max-width:950px;line-height:1.14;letter-spacing:-.045em;margin:16px 0}h2{font-size:1.55rem;margin:12px 0}
+.lead{max-width:820px;font-size:1.12rem;color:#355349}
+.keylinks{display:flex;flex-wrap:wrap;gap:13px;margin:24px 0}
+.btn{display:inline-block;text-decoration:none;border-radius:8px;padding:11px 16px;font-weight:700;border:1.5px solid var(--ink)}
+.btn.primary{background:var(--ink);color:#fff}.btn.light{background:#fff}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:23px 0}
+.kpi{background:#fff;border:1px solid var(--line);padding:19px;border-radius:12px}
+.num{font-size:2rem;font-weight:850;line-height:1.1;letter-spacing:-.04em}.kpi small{display:block;color:var(--muted);font-size:.8rem;margin-top:10px}
+.muted{color:var(--muted)}.warn{border-left:4px solid #b87519;background:#fff9ea;padding:15px 18px;margin:20px 0}
+main{padding:26px 0 62px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:23px;margin:22px 0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+label{font-weight:700}select{border:1px solid #75958b;border-radius:7px;padding:11px 12px;background:white;color:var(--ink);font:inherit;min-width:168px}
+.table-scroll{overflow-x:auto;max-width:100%}
+table{width:100%;border-collapse:collapse;min-width:560px}caption{text-align:left;padding-bottom:12px;color:var(--muted)}
+th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f1f7f4;color:#21473b;white-space:nowrap;font-size:.87rem}
+td{font-variant-numeric:tabular-nums}
+.kind{font-size:.78rem;font-weight:700;color:#27634e;border:1px solid #83b4a1;border-radius:5px;padding:3px 8px}
+.visually-hidden{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden}
+.notes li{margin:6px 0}.foot{background:#173f36;color:#e9f5ee;padding:28px 0}.foot a{color:#eefddd}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:17px}.hero{padding-top:24px}table{font-size:.9rem}}
+@media(max-width:400px){.kpis{grid-template-columns:1fr 1fr;gap:8px}.kpi{padding:12px}.num{font-size:1.65rem}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Synthetic Field-Service Routing and Backfill Demo","programmingLanguage":"Python","codeRepository":"https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018","description":"Local deterministic synthetic-only field-service and consent-safe duplicate customer route backfill proof, not an authorized production service."}</script>
+</head>
+<body>
+<header><div class="container headerinner">
+<a class="brand" href="https://livastic-vm2-primary-20260911.github.io/">Workflow Guard / Operations Lab</a>
+<nav aria-label="Main navigation">
+<a href="#schedule">Routes</a><a href="#backfill">Unsent backfill</a>
+<a href="#constraints">Boundaries</a><a href="https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018">Source &amp; tests ↗</a>
+</nav></div></header>
+<section class="hero"><div class="container">
+<span class="chip">LIVE PAGE · STATIC RESULT · FICTIONAL INPUT ONLY</span>
+<h1>A real route-planner result, without a single real customer or message sent.</h1>
+<p class="lead">Inspect reproducible Python output built with a publicly obtainable OSRM travel-time matrix over <strong>invented San Francisco points</strong>. Skills, working hours, time windows and return-to-depot feasibility are checked. All backfill communications are <strong>unsent drafts</strong>.</p>
+<div class="keylinks">
+<a class="btn primary" href="#schedule">Inspect five scheduled jobs ↓</a>
+<a class="btn light" href="https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018">Read source &amp; run 32 tests ↗</a>
+<a class="btn light" href="./synthetic_plan.json">Inspect complete reproducible JSON ↗</a>
+</div>
+<div class="kpis" aria-label="Fictional scenario outcomes">
+<div class="kpi"><div class="num">5 / 6</div><small>synthetic scheduled jobs</small></div>
+<div class="kpi"><div class="num">1</div><small>infeasible synthetic task, explicitly rejected</small></div>
+<div class="kpi"><div class="num">6</div><small>backfill candidate drafts (not sent)</small></div>
+<div class="kpi"><div class="num">0</div><small>real outreach sends / paid contracts</small></div>
+</div>
+<p class="warn"><strong>Commercial status:</strong> This is a developer's pre-award technical demonstration for an independently posted field-service software brief. No funded buyer award, production deployment, escrow release, staff dispatch, live customer order or paid contract is claimed. Public road-time estimates are historical examples, not real-time traffic.</p>
+</div></section>
+<main class="container">
+<section id="schedule" class="panel" aria-labelledby="schedule-title">
+<div class="topbar"><div><span class="chip">01 / HARD-CONSTRAINT SCHEDULE</span><h2 id="schedule-title">Inspect a synthetic crew day</h2></div>
+<div><label for="crew">Crew</label> <select id="crew" aria-controls="schedule-rows gap-rows">
+<option value="north">North crew</option><option value="south">South crew</option>
+</select></div></div>
+<p class="muted">Times are generated by the original Python planner, not manually typed forecasts. Each insertion rechecks the remaining route, skill matching, appointment window, working shift and depot return.</p>
+<div class="table-scroll"><table><caption>Committed visit schedule for the selected fictional crew</caption>
+<thead><tr><th scope="col">Job</th><th scope="col">Location ID</th><th scope="col">Arrival</th><th scope="col">Start</th><th scope="col">End</th><th scope="col">Leg minutes</th></tr></thead>
+<tbody id="schedule-rows"><tr><td colspan="6">Loading verified synthetic example…</td></tr></tbody></table></div>
+<p id="crew-summary" role="status" aria-live="polite">Loading selected crew's result…</p>
+<h3>Feasible available gaps</h3><div class="table-scroll"><table><thead><tr><th scope="col">After job</th><th scope="col">Gap start</th><th scope="col">Gap end</th><th scope="col">Near location</th></tr></thead><tbody id="gap-rows"><tr><td colspan="4">Loading…</td></tr></tbody></table></div>
+</section>
+<section id="backfill" class="panel" aria-labelledby="backfill-title">
+<span class="chip">02 / CONSENT-AWARE, UNSENT PROPOSALS</span><h2 id="backfill-title">Six backfill suggestions are drafts only</h2>
+<p>No email, SMS, direct message, booking or production customer data is used. A duplicate customer with any opt-out or a shared-address denial is excluded even if a prior row suggested that they could be contacted.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">Crew</th><th scope="col">Fictional ID</th><th scope="col">Gap</th><th scope="col">Reason</th><th scope="col">Added drive min</th></tr></thead><tbody id="backfill-rows"><tr><td colspan="5">Loading…</td></tr></tbody></table></div>
+<p class="muted">A potential suggestion is not a customer instruction. The human dispatcher must reconfirm consent, location, estimated travel, crew availability and service eligibility before any real outreach.</p>
+</section>
+<section id="constraints" class="panel">
+<span class="chip">03 / FAILURE MODES TESTED</span><h2>What this demo deliberately does not do</h2>
+<ul class="notes">
+<li>Never sends customer messages or claims a real booking. Its <code>did_send_outreach</code> output is <code>false</code>.</li>
+<li>Rejects unschedulable jobs with a reason instead of silently dropping them.</li>
+<li>Rejects an opted-out identity or shared location even if the other duplicate row looks eligible.</li>
+<li>Rejects contradictory duplicate customer history and invalid duration fields conservatively.</li>
+<li>Does not send identifiable service addresses to a public OSRM routing server. Real data requires a buyer-authorized, privacy-preserving route source and explicit contract scope.</li>
+<li>Does not prove global optimum, driving traffic conditions, compliance, live dispatch or a paid contract.</li>
+</ul>
+<p><strong>Next commercial step, only after funded acceptance:</strong> integrate a buyer-approved HTTPS/A2A agent, authorized matrix source, consent-safe CSV ingestion, audit trail, secure lifecycle and buyer confirmation. No work on confidential customer files is represented here.</p>
+<p><a href="https://github.com/livastic-vm2-primary-20260911/vm2-route-backfill-demo-20261018/blob/main/README.md">Reproduce all tests locally ↗</a></p>
+</section>
+</main>
+<footer class="foot"><div class="container"><strong>Workflow Guard · Original AI-assisted software example</strong><p>Public source and entirely synthetic test fixtures. One beneficial owner across development VMs. Demonstration views and GitHub stars are not sales, approval, deposited USDC or guarantees.</p></div></footer>
+<script>
+"use strict";
+const ids=Object.freeze({schedule:"schedule-rows",gaps:"gap-rows",backfill:"backfill-rows"});
+const text=(val)=>String(val??"—").slice(0,200);
+const cell=(row,val)=>{const td=document.createElement("td");td.textContent=text(val);row.append(td);};
+function fillRows(containerId, data, values,emptyLabel){
+ const tbody=document.getElementById(containerId);
+ tbody.replaceChildren();
+ if(!data.length){
+  const tr=document.createElement("tr");const td=document.createElement("td");
+  td.colSpan=values.length;td.textContent=emptyLabel;tr.append(td);tbody.append(tr);return;
+ }
+ for(const record of data){
+  const tr=document.createElement("tr");
+  for(const f of values)cell(tr,f(record));
+  tbody.append(tr);
+ }
+}
+function render(plan){
+ const name=document.getElementById("crew").value;
+ const crew=plan.routes[name];
+ if(!crew)return;
+ fillRows(ids.schedule,crew.schedule,[x=>x.job_id,x=>x.location,x=>x.arrive,x=>x.start,x=>x.end,x=>x.drive_minutes],"No jobs.");
+ fillRows(ids.gaps,crew.gaps,[x=>x.after_job||"Start",x=>x.from,x=>x.until,x=>x.near_location],"No available gaps.");
+ fillRows(ids.backfill,plan.backfill_suggestions_drafts_only,
+  [x=>x.crew_id,x=>x.customer_id,x=>x.gap,x=>x.reason,x=>x.extra_drive_minutes],"No eligible draft suggestions.");
+ document.getElementById("crew-summary").textContent=
+  name+" crew: "+crew.schedule.length+" synthetic jobs, "+crew.total_drive_minutes+
+  " min synthetic estimated driving, return "+crew.return_to_start+
+  ". Total rejected jobs across all crews: "+plan.unassigned.length+".";
+}
+(async()=>{
+ try{
+  const response=await fetch("./synthetic_plan.json",{cache:"no-store"});
+  if(!response.ok)throw Error("fixture not available");
+  const plan=await response.json();
+  if(plan.synthetic_only_demo!==true || plan.did_send_outreach!==false
+    || !plan.routes || !Array.isArray(plan.unassigned)
+    || !Array.isArray(plan.backfill_suggestions_drafts_only)
+    || Object.keys(plan.routes).length!==2
+    || plan.backfill_suggestions_drafts_only.length!==6)throw Error("invalid synthetic fixture");
+  render(plan);
+  document.getElementById("crew").addEventListener("change",()=>render(plan));
+ }catch(e){
+  document.getElementById("crew-summary").textContent=
+   "Demo fixture cannot be loaded in this environment. The committed JSON and local Python source remain available above.";
+ }
+})();
+</script>
+</body></html>

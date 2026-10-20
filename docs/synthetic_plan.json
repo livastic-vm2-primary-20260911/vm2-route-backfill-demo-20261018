@@ -1,0 +1,209 @@
+{
+  "runDate": "2026-10-18",
+  "routing_source": "OSRM public ROUTER DEMO; fabricated SF locations; 2026-10-17",
+  "synthetic_only_demo": true,
+  "did_send_outreach": false,
+  "routes": {
+    "north": {
+      "schedule": [
+        {
+          "job_id": "job-A",
+          "location": "J1",
+          "arrive": "08:03",
+          "start": "08:30",
+          "end": "09:45",
+          "drive_minutes": 3,
+          "start_min": 510,
+          "end_min": 585
+        },
+        {
+          "job_id": "job-B",
+          "location": "J3",
+          "arrive": "09:47",
+          "start": "10:30",
+          "end": "11:30",
+          "drive_minutes": 2,
+          "start_min": 630,
+          "end_min": 690
+        }
+      ],
+      "return_to_start": "11:34",
+      "total_drive_minutes": 9,
+      "gaps": [
+        {
+          "crew_id": "north",
+          "after_job": "job-A",
+          "position": 1,
+          "from_min": 585,
+          "until_min": 628,
+          "from": "09:45",
+          "until": "10:28",
+          "near_location": "J1"
+        },
+        {
+          "crew_id": "north",
+          "after_job": "job-B",
+          "position": 2,
+          "from_min": 690,
+          "until_min": 1016,
+          "from": "11:30",
+          "until": "16:56",
+          "near_location": "J3"
+        }
+      ]
+    },
+    "south": {
+      "schedule": [
+        {
+          "job_id": "job-C",
+          "location": "J8",
+          "arrive": "08:02",
+          "start": "08:45",
+          "end": "10:00",
+          "drive_minutes": 2,
+          "start_min": 525,
+          "end_min": 600
+        },
+        {
+          "job_id": "job-D",
+          "location": "J11",
+          "arrive": "10:02",
+          "start": "11:00",
+          "end": "12:10",
+          "drive_minutes": 2,
+          "start_min": 660,
+          "end_min": 730
+        },
+        {
+          "job_id": "job-E",
+          "location": "J12",
+          "arrive": "12:11",
+          "start": "13:00",
+          "end": "13:45",
+          "drive_minutes": 1,
+          "start_min": 780,
+          "end_min": 825
+        }
+      ],
+      "return_to_start": "13:49",
+      "total_drive_minutes": 9,
+      "gaps": [
+        {
+          "crew_id": "south",
+          "after_job": null,
+          "position": 0,
+          "from_min": 480,
+          "until_min": 523,
+          "from": "08:00",
+          "until": "08:43",
+          "near_location": "D10"
+        },
+        {
+          "crew_id": "south",
+          "after_job": "job-C",
+          "position": 1,
+          "from_min": 600,
+          "until_min": 658,
+          "from": "10:00",
+          "until": "10:58",
+          "near_location": "J8"
+        },
+        {
+          "crew_id": "south",
+          "after_job": "job-D",
+          "position": 2,
+          "from_min": 730,
+          "until_min": 779,
+          "from": "12:10",
+          "until": "12:59",
+          "near_location": "J11"
+        },
+        {
+          "crew_id": "south",
+          "after_job": "job-E",
+          "position": 3,
+          "from_min": 825,
+          "until_min": 1016,
+          "from": "13:45",
+          "until": "16:56",
+          "near_location": "J12"
+        }
+      ]
+    }
+  },
+  "unassigned": [
+    {
+      "job_id": "job-UNASSIGNABLE",
+      "reason": "no skill-matching feasible insertion within shift/window, or routing data unavailable"
+    }
+  ],
+  "backfill_suggestions_drafts_only": [
+    {
+      "crew_id": "north",
+      "customer_id": "cust-due",
+      "location": "C2",
+      "gap": "11:30-16:56",
+      "reason": "service interval 109/30 days",
+      "confidence": "higher",
+      "extra_drive_minutes": 1,
+      "draft_not_sent": "Hello Example A, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    },
+    {
+      "crew_id": "south",
+      "customer_id": "cust-quote",
+      "location": "C9",
+      "gap": "13:45-16:56",
+      "reason": "buyer-marked outstanding quote",
+      "confidence": "lower",
+      "extra_drive_minutes": 1,
+      "draft_not_sent": "Hello Example C, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    },
+    {
+      "crew_id": "south",
+      "customer_id": "cust-quote",
+      "location": "C9",
+      "gap": "10:00-10:58",
+      "reason": "buyer-marked outstanding quote",
+      "confidence": "lower",
+      "extra_drive_minutes": 2,
+      "draft_not_sent": "Hello Example C, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    },
+    {
+      "crew_id": "north",
+      "customer_id": "cust-due",
+      "location": "C2",
+      "gap": "09:45-10:28",
+      "reason": "service interval 109/30 days",
+      "confidence": "higher",
+      "extra_drive_minutes": 3,
+      "draft_not_sent": "Hello Example A, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    },
+    {
+      "crew_id": "south",
+      "customer_id": "cust-quote",
+      "location": "C9",
+      "gap": "12:10-12:59",
+      "reason": "buyer-marked outstanding quote",
+      "confidence": "lower",
+      "extra_drive_minutes": 3,
+      "draft_not_sent": "Hello Example C, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    },
+    {
+      "crew_id": "north",
+      "customer_id": "cust-quote",
+      "location": "C9",
+      "gap": "11:30-16:56",
+      "reason": "buyer-marked outstanding quote",
+      "confidence": "lower",
+      "extra_drive_minutes": 4,
+      "draft_not_sent": "Hello Example C, we have a possible opening near you on 2026-10-18. Would you like our team to contact you about scheduling?"
+    }
+  ],
+  "notes": [
+    "All minutes come from supplied routing matrix; synthetic data must not be represented as actual road times.",
+    "Suggestions are provisional; dispatcher verifies travel/traffic/customer consent before sending.",
+    "Any opt-out in a duplicate customer record blocks that identity and address from outreach suggestions.",
+    "Contradictory duplicate service dates, plans, skills or locations are excluded pending buyer review.",
+    "No customer contact is sent or attempted by this program."
+  ]
+}
