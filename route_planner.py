@@ -168,15 +168,40 @@ def gaps(crew: dict, route: list[dict], matrix: Matrix, minimum: int) -> list[di
 
 def backfill(crews: list[dict], routes: dict, people: list[dict],
              matrix: Matrix, today: date, min_gap: int):
-    # Normalize duplicates and fail closed on opt-outs, missing addresses/dates.
+    # Scan ALL source rows before proposing anything. CSV exports commonly include
+    # repeated customer IDs or an older row that still claims contact permission
+    # despite a later opt-out. Suppress the whole identity (and shared address)
+    # on ANY denial, regardless of input row order. Never send outbound messages.
+    blocked_ids=set()
+    blocked_locations=set()
+    conflicting_ids=set()
+    identity_facts={}
+    for raw in people:
+        contact=str(raw.get("customer_id") or "").strip()
+        location=str(raw.get("location") or "").strip().casefold().replace(" ","")
+        if truthy(raw.get("do_not_contact")) or truthy(raw.get("opt_out")):
+            if contact:blocked_ids.add(contact)
+            if location:blocked_locations.add(location)
+        if not contact or not location:continue
+        # Never trust an older duplicate record when a second export says the
+        # same ID has a different service history, interval, address or quote.
+        facts=(location,
+               str(raw.get("last_service_date") or "").strip(),
+               str(raw.get("service_interval_days") or "").strip(),
+               str(raw.get("open_quote") or "").strip().lower(),
+               str(raw.get("required_skill") or "").strip().lower(),
+               str(raw.get("duration_minutes") or "").strip())
+        old=identity_facts.setdefault(contact,facts)
+        if old!=facts:conflicting_ids.add(contact)
+
     clean={}
-    reasons={}
     for raw in people:
         contact=str(raw.get("customer_id") or "").strip()
         location=str(raw.get("location") or "").strip()
-        if not contact or not location or truthy(raw.get("do_not_contact")) or truthy(raw.get("opt_out")):
+        dedupe=location.casefold().replace(" ","")
+        if (not contact or not location or contact in blocked_ids
+                or dedupe in blocked_locations or contact in conflicting_ids):
             continue
-        dedupe=location.lower().replace(" ","")
         if dedupe in clean:continue
         last=raw.get("last_service_date") or ""
         plan=raw.get("service_interval_days") or ""
@@ -190,7 +215,11 @@ def backfill(crews: list[dict], routes: dict, people: list[dict],
             due=False
         if not (due or open_quote):continue
         if raw.get("required_skill") is None or not str(raw["required_skill"]).strip():continue
-        duration=int(raw.get("duration_minutes") or 0)
+        try:
+            duration=int(raw.get("duration_minutes") or 0)
+        except (ValueError,TypeError):
+            # A malformed customer CSV must not abort an otherwise safe route.
+            continue
         if duration<1:continue
         reason=("service interval "+str(days)+"/"+str(interval)+" days" if due
                 else "buyer-marked outstanding quote")
@@ -240,6 +269,8 @@ def plan(crews:list[dict], jobs:list[dict], customers:list[dict],
             "backfill_suggestions_drafts_only":backfill(crews,routes,customers,matrix,today,min_gap),
             "notes":["All minutes come from supplied routing matrix; synthetic data must not be represented as actual road times.",
                      "Suggestions are provisional; dispatcher verifies travel/traffic/customer consent before sending.",
+                     "Any opt-out in a duplicate customer record blocks that identity and address from outreach suggestions.",
+                     "Contradictory duplicate service dates, plans, skills or locations are excluded pending buyer review.",
                      "No customer contact is sent or attempted by this program."]}
 
 
